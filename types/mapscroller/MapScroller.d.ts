@@ -1,8 +1,8 @@
-import { CameraMap as Map } from 'map/CameraMap';
-import { IContentData } from 'contentmanager/IContent';
-import { ContentManager } from 'contentmanager/ContentManager';
+import { CameraMap as Map } from '../map/CameraMap';
+import { IContentData } from '../contentmanager/IContent';
+import { ContentManager } from '../contentmanager/ContentManager';
 import { IMapScrollerContent } from './IMapScrollerContent';
-import { ScrollControl, ScrollControlOptions } from 'scrollcontrol/ScrollControl';
+import { ScrollControl, ScrollControlOptions } from '../scrollcontrol/ScrollControl';
 export declare class MapScroller<ContentT extends IMapScrollerContent = IMapScrollerContent> {
     private _container;
     private _viewportManager;

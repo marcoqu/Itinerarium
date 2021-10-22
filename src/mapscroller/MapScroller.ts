@@ -1,10 +1,10 @@
-import { CameraMap as Map } from 'map/CameraMap';
-import { ViewportManager } from 'viewportmanager/ViewportManager';
+import { CameraMap as Map } from '../map/CameraMap';
+import { ViewportManager } from '../viewportmanager/ViewportManager';
 
-import { IContentData } from 'contentmanager/IContent';
-import { ContentManager } from 'contentmanager/ContentManager';
+import { IContentData } from '../contentmanager/IContent';
+import { ContentManager } from '../contentmanager/ContentManager';
 import { IMapScrollerContent } from './IMapScrollerContent';
-import { accelleratingFn, ScrollControl, ScrollControlOptions } from 'scrollcontrol/ScrollControl';
+import { accelleratingFn, ScrollControl, ScrollControlOptions } from '../scrollcontrol/ScrollControl';
 
 export class MapScroller<ContentT extends IMapScrollerContent = IMapScrollerContent> {
     private _container: HTMLDivElement;

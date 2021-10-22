@@ -1,6 +1,6 @@
-import { ViewportManager } from 'viewportmanager/ViewportManager';
-import { ContentManager } from 'contentmanager/ContentManager';
-import { accelleratingFn, ScrollControl } from 'scrollcontrol/ScrollControl';
+import { ViewportManager } from '../viewportmanager/ViewportManager';
+import { ContentManager } from '../contentmanager/ContentManager';
+import { accelleratingFn, ScrollControl } from '../scrollcontrol/ScrollControl';
 export class MapScroller {
     constructor(container, map) {
         this._contents = [];
