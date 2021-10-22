@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+        "target": "ES2021",
+        "module": "esnext",
+        "lib": ["ES2021", "dom"],
+        "types": ["offscreencanvas"],
+        "allowSyntheticDefaultImports": true,
+        "noImplicitAny": true,
+        "strict": true,
+        "noStrictGenericChecks": true,
+        "experimentalDecorators": true,
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "allowJs": true,
+        "baseUrl": "./src",
+        "typeRoots": [
+            // "./src/threebox/types/webvr-api",
+            "./node_modules/@types",
+        ],
+        "paths": {},
+        "outDir": "./dist",
+        "declarationDir": "./types",
+        "declaration": true,
+        "plugins": [
+            {
+                "name": "tslint-language-service"
+            }
+        ]
+    }
+}
