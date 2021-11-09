@@ -1,7 +1,7 @@
-export { CameraMap } from './map/CameraMap';
-export { MapScroller } from './mapscroller/MapScroller';
-export { ScriptLoader } from './scriptloader/ScriptLoader';
-export { ContentManager } from './contentmanager/ContentManager';
-export { ScrollControl, accelleratingFn, fixedSpeed, fixedTime, noEasing, } from './scrollcontrol/ScrollControl';
-export { ViewportManager } from './viewportmanager/ViewportManager';
+export { CameraMap } from './cameramap';
+export { MapScroller } from './mapscroller';
+export { ScriptLoader } from './scriptloader';
+export { ContentManager, } from './contentmanager';
+export { ScrollControl, accelleratingFn, fixedSpeed, fixedTime, noEasing, } from './scrollcontrol';
+export { ViewportManager } from './viewportmanager';
 //# sourceMappingURL=main.js.map

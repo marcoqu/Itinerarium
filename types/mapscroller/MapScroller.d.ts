@@ -1,4 +1,4 @@
-import { CameraMap as Map } from '../map/CameraMap';
+import { CameraMap as Map } from '../cameramap/CameraMap';
 import { IContentData } from '../contentmanager/IContent';
 import { ContentManager } from '../contentmanager/ContentManager';
 import { IMapScrollerContent } from './IMapScrollerContent';

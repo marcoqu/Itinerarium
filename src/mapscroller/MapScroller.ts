@@ -1,4 +1,4 @@
-import { CameraMap as Map } from '../map/CameraMap';
+import { CameraMap as Map } from '../cameramap/CameraMap';
 import { ViewportManager } from '../viewportmanager/ViewportManager';
 
 import { IContentData } from '../contentmanager/IContent';
