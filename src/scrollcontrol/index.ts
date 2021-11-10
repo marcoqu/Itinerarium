@@ -6,4 +6,4 @@ export {
     fixedSpeed,
     fixedTime,
     noEasing,
-} from "./ScrollControl";
+} from './ScrollControl';

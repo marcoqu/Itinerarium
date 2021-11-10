@@ -29,7 +29,7 @@
   },
   "scripts": {
     "build": "rd /s /q dist&rd /s /q types&tsc",
-    "lint": "eslint . --ext .ts ./src/js"
+    "lint": "eslint ./src --ext .ts --fix"
   },
   "author": "",
   "license": "ISC"

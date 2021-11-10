@@ -1,19 +1,10 @@
-export {
-    CameraMap,
-    ExtendedMapGL,
-    CameraPosition,
-    CameraFramingData
-} from './cameramap';
+export { CameraMap, ExtendedMapGL, CameraPosition, CameraFramingData } from './cameramap';
 
-export {
-    MapScroller,
-    IMapScrollerContent
-} from './mapscroller';
+export { MapScroller, IMapScrollerContent } from './mapscroller';
 
-export {
-    ScriptLoader,
-    ScriptData
-} from './scriptloader';
+export { ScriptLoader, ScriptData } from './scriptloader';
+
+export { ViewportManager } from './viewportmanager';
 
 export {
     IContent,
@@ -33,7 +24,3 @@ export {
     fixedTime,
     noEasing,
 } from './scrollcontrol';
-
-export {
-    ViewportManager
-} from './viewportmanager';
