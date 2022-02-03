@@ -131,7 +131,7 @@ export class MapScroller<ContentT extends IMapScrollerContent = IMapScrollerCont
         this._contentManager.getContents().forEach((c) => c.setDestination?.(time));
     }
 
-    public async reset(): Promise<void> {
+    public reset(): void {
         // disable scroll control
         this._scrollControl.disable();
         this._scrollControl.setPosition(0);
@@ -145,6 +145,6 @@ export class MapScroller<ContentT extends IMapScrollerContent = IMapScrollerCont
 
         // reset content manager
         this._contentManager.extentChanged.detach(this);
-        await this._contentManager.reset();
+        this._contentManager.reset();
     }
 }
