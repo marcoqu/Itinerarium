@@ -6,21 +6,20 @@ import turfBearing from '@turf/bearing';
 import turfDistance from '@turf/distance';
 import { CAMERA_FOV, Projection } from 'threebox';
 
-import { FlyToOptions, Map as MapGL, LngLat, MapboxOptions } from 'mapbox-gl';
+import { FlyToOptions, Map as MapGL, LngLat } from 'mapbox-gl';
 import { CameraFramingData, CameraPosition, coord2, coord3 } from './Camera';
 import { ExtendedMapGL } from './ExtendedMapGl';
 import { clamp, toDegrees, wrap } from '../utils/math';
 
-export class CameraMap {
+export class MapCamera {
     private _mapGL: ExtendedMapGL;
-    private _mapStyle: string | undefined;
 
     public get mapGL(): ExtendedMapGL {
         return this._mapGL;
     }
 
-    public constructor(mapOptions: MapboxOptions) {
-        this._mapGL = new MapGL(mapOptions) as ExtendedMapGL;
+    public constructor(map: MapGL) {
+        this._mapGL = map as ExtendedMapGL;
     }
 
     public async ready(): Promise<void> {
@@ -39,16 +38,6 @@ export class CameraMap {
             this._mapGL.once('load', onDataEvent);
             this._mapGL.once('error', onError);
         });
-    }
-
-    public setStyle(styleUrl?: string): void {
-        this._mapStyle = styleUrl;
-        if (!this._mapStyle) return;
-        this._mapGL.setStyle(this._mapStyle);
-    }
-
-    public getStyle(): string | undefined {
-        return this._mapStyle;
     }
 
     public setInteractive(interactive: boolean): void {

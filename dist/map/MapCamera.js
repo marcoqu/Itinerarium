@@ -5,11 +5,11 @@ import turfTransformRotate from '@turf/transform-rotate';
 import turfBearing from '@turf/bearing';
 import turfDistance from '@turf/distance';
 import { CAMERA_FOV, Projection } from 'threebox';
-import { Map as MapGL, LngLat } from 'mapbox-gl';
+import { LngLat } from 'mapbox-gl';
 import { clamp, toDegrees, wrap } from '../utils/math';
-export class CameraMap {
-    constructor(mapOptions) {
-        this._mapGL = new MapGL(mapOptions);
+export class MapCamera {
+    constructor(map) {
+        this._mapGL = map;
     }
     get mapGL() {
         return this._mapGL;
@@ -32,15 +32,6 @@ export class CameraMap {
             this._mapGL.once('load', onDataEvent);
             this._mapGL.once('error', onError);
         });
-    }
-    setStyle(styleUrl) {
-        this._mapStyle = styleUrl;
-        if (!this._mapStyle)
-            return;
-        this._mapGL.setStyle(this._mapStyle);
-    }
-    getStyle() {
-        return this._mapStyle;
     }
     setInteractive(interactive) {
         const action = interactive ? 'enable' : 'disable';
@@ -155,4 +146,4 @@ export function pitchFromCoords(eye, target) {
     const rad = Math.atan2(altitude - target[2], groundDistance);
     return wrap(90 - toDegrees(rad), 0, 360);
 }
-//# sourceMappingURL=CameraMap.js.map
+//# sourceMappingURL=MapCamera.js.map

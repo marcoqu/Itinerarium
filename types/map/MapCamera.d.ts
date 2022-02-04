@@ -1,15 +1,12 @@
 import turfBearing from '@turf/bearing';
-import { FlyToOptions, LngLat, MapboxOptions } from 'mapbox-gl';
+import { FlyToOptions, Map as MapGL, LngLat } from 'mapbox-gl';
 import { CameraFramingData, CameraPosition, coord3 } from './Camera';
 import { ExtendedMapGL } from './ExtendedMapGl';
-export declare class CameraMap {
+export declare class MapCamera {
     private _mapGL;
-    private _mapStyle;
     get mapGL(): ExtendedMapGL;
-    constructor(mapOptions: MapboxOptions);
+    constructor(map: MapGL);
     ready(): Promise<void>;
-    setStyle(styleUrl?: string): void;
-    getStyle(): string | undefined;
     setInteractive(interactive: boolean): void;
     update3D(): void;
     flyTo(options: FlyToOptions): Promise<void>;

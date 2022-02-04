@@ -1,4 +1,4 @@
-export { CameraMap } from './map/CameraMap';
+export { MapCamera } from './map/MapCamera';
 export { MapScroller } from './mapscroller/MapScroller';
 export { ScriptLoader } from './scriptloader/ScriptLoader';
 export { ContentManager } from './contentmanager/ContentManager';

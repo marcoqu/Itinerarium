@@ -1,11 +1,11 @@
-export { CameraMap } from './map/CameraMap';
+export { MapCamera } from './map/MapCamera';
 export { ExtendedMapGL } from './map/ExtendedMapGl';
 export { CameraPosition, CameraFramingData } from './map/Camera';
 
 export { MapScroller } from './mapscroller/MapScroller';
 export { ScriptLoader } from './scriptloader/ScriptLoader';
 export { ScriptData } from './scriptloader/ScriptData';
-export { IMapScrollerContent } from './mapscroller/IMapScrollerContent';
+export { IMapScrollerContent, IMapScrollerContentConstructor } from './mapscroller/IMapScrollerContent';
 export { ContentManager } from './contentmanager/ContentManager';
 export {
     IContent,

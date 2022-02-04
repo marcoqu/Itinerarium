@@ -1,7 +1,6 @@
-import { CameraMap as Map } from '../map/CameraMap';
+import { MapCamera } from '../map/MapCamera';
 import { ViewportManager } from '../viewportmanager/ViewportManager';
 
-import { IContentData } from '../contentmanager/IContent';
 import { ContentManager } from '../contentmanager/ContentManager';
 import { IMapScrollerContent } from './IMapScrollerContent';
 import { accelleratingFn, ScrollControl, ScrollControlOptions } from '../scrollcontrol/ScrollControl';
@@ -10,12 +9,10 @@ export class MapScroller<ContentT extends IMapScrollerContent = IMapScrollerCont
     private _container: HTMLDivElement;
 
     private _viewportManager: ViewportManager;
-    private _map: Map;
+    private _mapCamera: MapCamera;
 
     private _scrollControl: ScrollControl;
     private _contentManager: ContentManager<ContentT>;
-
-    private _contents: ContentT[] = [];
 
     public get scrollControl(): ScrollControl {
         return this._scrollControl;
@@ -25,9 +22,9 @@ export class MapScroller<ContentT extends IMapScrollerContent = IMapScrollerCont
         return this._contentManager;
     }
 
-    public constructor(container: HTMLDivElement, map: Map) {
+    public constructor(container: HTMLDivElement, mapCamera: MapCamera) {
         this._container = container;
-        this._map = map;
+        this._mapCamera = mapCamera;
 
         this._viewportManager = new ViewportManager();
 
@@ -41,20 +38,6 @@ export class MapScroller<ContentT extends IMapScrollerContent = IMapScrollerCont
 
         this._contentManager = new ContentManager<ContentT>();
         this._contentManager.extentChanged.attach(this, (e) => this._scrollControl.setBounds(e));
-
-        this.hide();
-    }
-
-    public async hide(): Promise<void> {
-        this._container.classList.add('hidden');
-        this.disable();
-    }
-
-    public show(): void {
-        this._container.classList.remove('hidden');
-        this._contentManager.setPosition(this._scrollControl.getPosition());
-        this._map.setInteractive(false);
-        this.enable();
     }
 
     public enable(): void {
@@ -71,14 +54,12 @@ export class MapScroller<ContentT extends IMapScrollerContent = IMapScrollerCont
     }
 
     // tofix
-    public async addContent(data: IContentData, content: ContentT, order?: number): Promise<ContentT> {
+    public async addContent(content: ContentT, position?: number): Promise<ContentT> {
         try {
-            content.init(this._container, this._map, this._viewportManager);
+            await content.init(this._container, this._mapCamera, this._viewportManager);
             content.seek?.attach(this, (v: number) => this._onSeeked(v, 500));
-            await content.setData(data);
-            this._contentManager.addContent(content, order);
+            this._contentManager.addContent(content, position);
             this._scrollControl.setBounds(this._contentManager.getExtent());
-            this._contents.push(content);
             return content;
         } catch (error) {
             console.error(error);
@@ -102,21 +83,13 @@ export class MapScroller<ContentT extends IMapScrollerContent = IMapScrollerCont
         return this._scrollControl.getOptions();
     }
 
-    public setMapStyle(styleUrl?: string): void {
-        this._map.setStyle(styleUrl);
-    }
-
-    public getMapStyle(): string | undefined {
-        return this._map.getStyle();
-    }
-
     public setDetachedCamera(detached: boolean): void {
         this._scrollControl[detached ? 'disable' : 'enable']();
-        this._map.setInteractive(detached);
+        this._mapCamera.setInteractive(detached);
     }
 
     public async ready(): Promise<void> {
-        return await this._map.ready();
+        return await this._mapCamera.ready();
     }
 
     private _onSeeked(time: number, offset?: number): void {
@@ -132,19 +105,13 @@ export class MapScroller<ContentT extends IMapScrollerContent = IMapScrollerCont
     }
 
     public reset(): void {
-        // disable scroll control
-        this._scrollControl.disable();
-        this._scrollControl.setPosition(0);
-
         // reset scroll control
         this._scrollControl.reset();
 
         // destroy contents
-        this._contents.forEach((c) => c.destroy());
-        this._contents = [];
+        this._contentManager.getContents().forEach((c) => c.destroy());
 
         // reset content manager
-        this._contentManager.extentChanged.detach(this);
         this._contentManager.reset();
     }
 }

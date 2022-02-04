@@ -17,7 +17,7 @@ export class ScriptLoader<ContentT extends IMapScrollerContent = IMapScrollerCon
     }
 
     public async loadScript(scriptData: ScriptData): Promise<void> {
-        await this._mapScroller.reset();
+        this._mapScroller.reset();
 
         // wait for map to be ready
         await this._mapScroller.ready();
@@ -30,7 +30,7 @@ export class ScriptLoader<ContentT extends IMapScrollerContent = IMapScrollerCon
             // DEBUG.log(`Loading required contents: ${requiredContents.length}`);
             const promises = requiredContents.map(async ([data, order]) => {
                 const content = await this._creatorFn(data);
-                return await this._mapScroller.addContent(data, content, order);
+                return await this._mapScroller.addContent(content, order);
             });
             await Promise.all(promises);
             // DEBUG.log('Loading required contents: done');
@@ -47,7 +47,7 @@ export class ScriptLoader<ContentT extends IMapScrollerContent = IMapScrollerCon
             // DEBUG.log(`Loading non required contents: ${nonRequiredContents.length}`);
             const promises = nonRequiredContents.map(async ([data, order]) => {
                 const content = await this._creatorFn(data);
-                return await this._mapScroller.addContent(data, content, order);
+                return await this._mapScroller.addContent(content, order);
             });
             const time = scriptData.preloadingTime ?? ScriptLoader.PRELOADING_TIME;
             // await timeout(Promise.all(promises), time);
@@ -62,18 +62,5 @@ export class ScriptLoader<ContentT extends IMapScrollerContent = IMapScrollerCon
         // set up scroll control
         if (scriptData.snapPositions) this._mapScroller.setSnapPositions(scriptData.snapPositions);
         if (scriptData.speed) this._mapScroller.setScrollOptions({ speedFactor: scriptData.speed });
-
-        // set up map
-        if (scriptData.mapStyle) this._mapScroller.setMapStyle(scriptData.mapStyle);
-
-        // this._editorBridge.setContents(this._contents);
     }
-
-    // private async _getScriptData(): Promise<ScriptData> {
-    //     if (!this._scriptData) throw new Error('No script data');
-    //     return {
-    //         ...this._scriptData,
-    //         contents: (await this._contents).map((c) => c.getData()) as IContentData[],
-    //     };
-    // }
 }
