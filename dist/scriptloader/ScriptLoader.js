@@ -6,8 +6,6 @@ export class ScriptLoader {
     }
     async loadScript(scriptData) {
         this._mapScroller.reset();
-        // wait for map to be ready
-        await this._mapScroller.ready();
         // load (and wait for) required contents
         try {
             const requiredContents = scriptData.contents
@@ -16,7 +14,7 @@ export class ScriptLoader {
             // DEBUG.log(`Loading required contents: ${requiredContents.length}`);
             const promises = requiredContents.map(async ([data, order]) => {
                 const content = await this._creatorFn(data);
-                return await this._mapScroller.addContent(content, order);
+                return this._mapScroller.addContent(content, order);
             });
             await Promise.all(promises);
             // DEBUG.log('Loading required contents: done');
@@ -33,7 +31,7 @@ export class ScriptLoader {
             // DEBUG.log(`Loading non required contents: ${nonRequiredContents.length}`);
             const promises = nonRequiredContents.map(async ([data, order]) => {
                 const content = await this._creatorFn(data);
-                return await this._mapScroller.addContent(content, order);
+                return this._mapScroller.addContent(content, order);
             });
             const time = scriptData.preloadingTime ?? ScriptLoader.PRELOADING_TIME;
             // await timeout(Promise.all(promises), time);

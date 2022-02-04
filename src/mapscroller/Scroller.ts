@@ -1,16 +1,9 @@
-import { MapCamera } from '../map/MapCamera';
-import { ViewportManager } from '../viewportmanager/ViewportManager';
-
 import { ContentManager } from '../contentmanager/ContentManager';
-import { IMapScrollerContent } from './IMapScrollerContent';
 import { accelleratingFn, ScrollControl, ScrollControlOptions } from '../scrollcontrol/ScrollControl';
+import { IScrollerContent } from './IScrollerContent';
 
-export class MapScroller<ContentT extends IMapScrollerContent = IMapScrollerContent> {
-    private _container: HTMLDivElement;
-
-    private _viewportManager: ViewportManager;
-    private _mapCamera: MapCamera;
-
+export class Scroller<ContentT extends IScrollerContent = IScrollerContent> {
+    private _scrollArea: HTMLDivElement;
     private _scrollControl: ScrollControl;
     private _contentManager: ContentManager<ContentT>;
 
@@ -22,13 +15,10 @@ export class MapScroller<ContentT extends IMapScrollerContent = IMapScrollerCont
         return this._contentManager;
     }
 
-    public constructor(container: HTMLDivElement, mapCamera: MapCamera) {
-        this._container = container;
-        this._mapCamera = mapCamera;
+    public constructor(scrollArea: HTMLDivElement) {
+        this._scrollArea = scrollArea;
 
-        this._viewportManager = new ViewportManager();
-
-        this._scrollControl = new ScrollControl(this._container, {
+        this._scrollControl = new ScrollControl(this._scrollArea, {
             mode: 'continous',
             tolerance: 5,
             snapThreshold: 300,
@@ -53,10 +43,8 @@ export class MapScroller<ContentT extends IMapScrollerContent = IMapScrollerCont
         this._scrollControl.destinationChanged.detach(this);
     }
 
-    // tofix
-    public async addContent(content: ContentT, position?: number): Promise<ContentT> {
+    public addContent(content: ContentT, position?: number): ContentT {
         try {
-            await content.init(this._container, this._mapCamera, this._viewportManager);
             content.seek?.attach(this, (v: number) => this._onSeeked(v, 500));
             this._contentManager.addContent(content, position);
             this._scrollControl.setBounds(this._contentManager.getExtent());
@@ -83,15 +71,6 @@ export class MapScroller<ContentT extends IMapScrollerContent = IMapScrollerCont
         return this._scrollControl.getOptions();
     }
 
-    public setDetachedCamera(detached: boolean): void {
-        this._scrollControl[detached ? 'disable' : 'enable']();
-        this._mapCamera.setInteractive(detached);
-    }
-
-    public async ready(): Promise<void> {
-        return await this._mapCamera.ready();
-    }
-
     private _onSeeked(time: number, offset?: number): void {
         if (offset !== undefined) {
             const direction = Math.sign(time - this._scrollControl.getPosition());
@@ -109,7 +88,7 @@ export class MapScroller<ContentT extends IMapScrollerContent = IMapScrollerCont
         this._scrollControl.reset();
 
         // destroy contents
-        this._contentManager.getContents().forEach((c) => c.destroy());
+        this._contentManager.getContents().forEach((c) => c.destroy?.());
 
         // reset content manager
         this._contentManager.reset();

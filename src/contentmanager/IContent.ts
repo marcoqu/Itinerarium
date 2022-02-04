@@ -4,7 +4,6 @@ export interface IContent {
     low: number;
     high: number;
     intervalChanged: VoidSyncEvent;
-    destroy(): void;
     setPosition(position: number): void;
     setVisibility(visible: boolean): void;
 }

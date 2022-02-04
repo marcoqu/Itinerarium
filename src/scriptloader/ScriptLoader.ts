@@ -1,26 +1,23 @@
-import { MapScroller } from '../mapscroller/MapScroller';
-import { IMapScrollerContent } from '../mapscroller/IMapScrollerContent';
+import { Scroller } from '../mapscroller/Scroller';
+import { IScrollerContent } from '../mapscroller/IScrollerContent';
 import { ScriptData } from './ScriptData';
 import { timeout } from '../utils/timeout';
 import { IContentData } from '../contentmanager/IContent';
 
 export type CreatorFn<ContentT> = (data: IContentData) => Promise<ContentT>;
 
-export class ScriptLoader<ContentT extends IMapScrollerContent = IMapScrollerContent> {
+export class ScriptLoader<ContentT extends IScrollerContent = IScrollerContent> {
     private static readonly PRELOADING_TIME = 5000;
-    private _mapScroller: MapScroller<ContentT>;
+    private _mapScroller: Scroller<ContentT>;
     private _creatorFn: CreatorFn<ContentT>;
 
-    public constructor(mapScroller: MapScroller<ContentT>, creatorFn: CreatorFn<ContentT>) {
+    public constructor(mapScroller: Scroller<ContentT>, creatorFn: CreatorFn<ContentT>) {
         this._mapScroller = mapScroller;
         this._creatorFn = creatorFn;
     }
 
     public async loadScript(scriptData: ScriptData): Promise<void> {
         this._mapScroller.reset();
-
-        // wait for map to be ready
-        await this._mapScroller.ready();
 
         // load (and wait for) required contents
         try {
@@ -30,7 +27,7 @@ export class ScriptLoader<ContentT extends IMapScrollerContent = IMapScrollerCon
             // DEBUG.log(`Loading required contents: ${requiredContents.length}`);
             const promises = requiredContents.map(async ([data, order]) => {
                 const content = await this._creatorFn(data);
-                return await this._mapScroller.addContent(content, order);
+                return this._mapScroller.addContent(content, order);
             });
             await Promise.all(promises);
             // DEBUG.log('Loading required contents: done');
@@ -47,7 +44,7 @@ export class ScriptLoader<ContentT extends IMapScrollerContent = IMapScrollerCon
             // DEBUG.log(`Loading non required contents: ${nonRequiredContents.length}`);
             const promises = nonRequiredContents.map(async ([data, order]) => {
                 const content = await this._creatorFn(data);
-                return await this._mapScroller.addContent(content, order);
+                return this._mapScroller.addContent(content, order);
             });
             const time = scriptData.preloadingTime ?? ScriptLoader.PRELOADING_TIME;
             // await timeout(Promise.all(promises), time);

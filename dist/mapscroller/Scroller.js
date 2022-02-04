@@ -1,12 +1,9 @@
-import { ViewportManager } from '../viewportmanager/ViewportManager';
 import { ContentManager } from '../contentmanager/ContentManager';
 import { accelleratingFn, ScrollControl } from '../scrollcontrol/ScrollControl';
-export class MapScroller {
-    constructor(container, mapCamera) {
-        this._container = container;
-        this._mapCamera = mapCamera;
-        this._viewportManager = new ViewportManager();
-        this._scrollControl = new ScrollControl(this._container, {
+export class Scroller {
+    constructor(scrollArea) {
+        this._scrollArea = scrollArea;
+        this._scrollControl = new ScrollControl(this._scrollArea, {
             mode: 'continous',
             tolerance: 5,
             snapThreshold: 300,
@@ -33,10 +30,8 @@ export class MapScroller {
         this._scrollControl.positionChanged.detach(this);
         this._scrollControl.destinationChanged.detach(this);
     }
-    // tofix
-    async addContent(content, position) {
+    addContent(content, position) {
         try {
-            await content.init(this._container, this._mapCamera, this._viewportManager);
             content.seek?.attach(this, (v) => this._onSeeked(v, 500));
             this._contentManager.addContent(content, position);
             this._scrollControl.setBounds(this._contentManager.getExtent());
@@ -59,13 +54,6 @@ export class MapScroller {
     getScrollOptions() {
         return this._scrollControl.getOptions();
     }
-    setDetachedCamera(detached) {
-        this._scrollControl[detached ? 'disable' : 'enable']();
-        this._mapCamera.setInteractive(detached);
-    }
-    async ready() {
-        return await this._mapCamera.ready();
-    }
     _onSeeked(time, offset) {
         if (offset !== undefined) {
             const direction = Math.sign(time - this._scrollControl.getPosition());
@@ -80,9 +68,9 @@ export class MapScroller {
         // reset scroll control
         this._scrollControl.reset();
         // destroy contents
-        this._contentManager.getContents().forEach((c) => c.destroy());
+        this._contentManager.getContents().forEach((c) => c.destroy?.());
         // reset content manager
         this._contentManager.reset();
     }
 }
-//# sourceMappingURL=MapScroller.js.map
+//# sourceMappingURL=Scroller.js.map
