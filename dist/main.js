@@ -1,5 +1,5 @@
 export { MapCamera } from './map/MapCamera';
-export { Scroller as MapScroller } from './scroller/Scroller';
+export { Scroller } from './scroller/Scroller';
 export { ScriptLoader } from './scriptloader/ScriptLoader';
 export { ContentManager } from './contentmanager/ContentManager';
 export { ScrollControl, accelleratingFn, fixedSpeed, fixedTime, noEasing, } from './scrollcontrol/ScrollControl';
