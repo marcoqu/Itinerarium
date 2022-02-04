@@ -1,5 +1,5 @@
-import { Scroller } from '../mapscroller/Scroller';
-import { IScrollerContent } from '../mapscroller/IScrollerContent';
+import { Scroller } from '../scroller/Scroller';
+import { IScrollerContent } from '../scroller/IScrollerContent';
 import { ScriptData } from './ScriptData';
 import { timeout } from '../utils/timeout';
 import { IContentData } from '../contentmanager/IContent';
