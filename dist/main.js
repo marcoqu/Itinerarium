@@ -1,4 +1,5 @@
-export { MapCamera } from './map/MapCamera';
+export { CameraHelper } from './map/CameraHelper';
+export { CameraPath } from './map/CameraPath';
 export { Scroller } from './scroller/Scroller';
 export { ScriptLoader } from './scriptloader/ScriptLoader';
 export { ContentManager } from './contentmanager/ContentManager';

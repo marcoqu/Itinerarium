@@ -1,6 +1,5 @@
-export { MapCamera } from './map/MapCamera';
-export { ExtendedMapGL } from './map/ExtendedMapGl';
-export { CameraPosition, CameraFramingData } from './map/Camera';
+export { CameraHelper } from './map/CameraHelper';
+export { CameraPath } from './map/CameraPath';
 export { Scroller } from './scroller/Scroller';
 export { ScriptLoader } from './scriptloader/ScriptLoader';
 export { ScriptData } from './scriptloader/ScriptData';
