@@ -1,4 +1,4 @@
-export { CameraHelper } from './map/CameraHelper';
+export * as cameraHelpers from './map/cameraHelpers';
 export { CameraPath } from './map/CameraPath';
 
 export { Scroller } from './scroller/Scroller';
