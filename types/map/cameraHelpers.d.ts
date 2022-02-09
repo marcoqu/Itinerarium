@@ -13,3 +13,5 @@ export declare function getCameraFromPositionAndTarget(map: Map, cameraLngLat: L
 export declare function coordsFromFreeCameraOptions(opts: FreeCameraOptions): coord3;
 export declare function coordsFromCameraOptions(map: Map, opts: CameraOptions): coord3;
 export declare function resolvePadding(map: Map, padding?: ExtendedPaddingOptions): PaddingOptions;
+export declare function freeCameraOptionsFromCameraOptions(map: Map, opts: CameraOptions): FreeCameraOptions;
+export declare function cameraOptionsFromFreeCameraOptions(map: Map, opts: FreeCameraOptions): CameraOptions;

@@ -9,7 +9,7 @@ export function getCameraFromBoxAndBearing(map, bounds, bearing, padding, maxZoo
     const cameraOptions = map.cameraForBounds(bounds, { bearing, padding, maxZoom });
     if (!cameraOptions)
         throw new Error('No valid camera found');
-    return _freeCameraOptionsFromCameraOptions(map, cameraOptions);
+    return freeCameraOptionsFromCameraOptions(map, cameraOptions);
 }
 export function getCameraFromCircleAndBearing(map, center, radius, bearing, padding, maxZoom) {
     const lngLat = LngLat.convert(center).toArray();
@@ -21,7 +21,7 @@ export function getCameraFromPositionAndTarget(map, cameraLngLat, cameraAltitude
     targetLngLat = LngLat.convert(targetLngLat ?? cameraLngLat).toArray();
     const bearing = turfBearing(cameraLngLat, targetLngLat);
     const pitch = _pitchFromCoords(cameraLngLat, cameraAltitude, targetLngLat);
-    return _freeCameraOptionsFromCameraOptions(map, {
+    return freeCameraOptionsFromCameraOptions(map, {
         center: cameraLngLat,
         zoom: _altitudeToZoom(map, cameraLngLat[0], cameraAltitude),
         pitch,
@@ -36,7 +36,7 @@ export function coordsFromFreeCameraOptions(opts) {
     return [lngLat.lat, lngLat.lng, opts.position?.toAltitude()];
 }
 export function coordsFromCameraOptions(map, opts) {
-    return coordsFromFreeCameraOptions(_freeCameraOptionsFromCameraOptions(map, opts));
+    return coordsFromFreeCameraOptions(freeCameraOptionsFromCameraOptions(map, opts));
 }
 export function resolvePadding(map, padding = {}) {
     const tr = map.transform;
@@ -49,7 +49,7 @@ export function resolvePadding(map, padding = {}) {
 }
 // Check if solved:
 // https://github.com/mapbox/mapbox-gl-js/issues/10190
-function _freeCameraOptionsFromCameraOptions(map, opts) {
+export function freeCameraOptionsFromCameraOptions(map, opts) {
     const tr = map.transform.clone();
     tr.center = opts.center;
     tr.zoom = opts.zoom;
@@ -57,18 +57,19 @@ function _freeCameraOptionsFromCameraOptions(map, opts) {
     tr.pitch = opts.pitch ?? 0;
     return tr.getFreeCameraOptions();
 }
+// Check if solved:
 // https://github.com/mapbox/mapbox-gl-js/issues/10190
-// function _cameraOptionsFromFreeCameraOptions(map: Map, opts: FreeCameraOptions): CameraOptions {
-//     const tr = (map as ExtendedMapGL).transform.clone();
-//     tr.setFreeCameraOptions(opts);
-//     return {
-//         center: tr.center,
-//         zoom: tr.zoom,
-//         bearing: tr.bearing,
-//         pitch: tr.pitch,
-//         padding: tr.padding,
-//     };
-// }
+export function cameraOptionsFromFreeCameraOptions(map, opts) {
+    const tr = map.transform.clone();
+    tr.setFreeCameraOptions(opts);
+    return {
+        center: tr.center,
+        zoom: tr.zoom,
+        bearing: tr.bearing,
+        pitch: tr.pitch,
+        padding: tr.padding,
+    };
+}
 function _boundsFromCenterRadiusAndBearing(center, radius, bearing) {
     const circle = turfCircle(center, radius, { units: 'kilometers' });
     const bbox = turfBbox(circle);
