@@ -72,14 +72,14 @@ function controlRotation(
 
 export function slerp(
     t: number,
-    w0: number,
     x0: number,
     y0: number,
     z0: number,
-    w1: number,
+    w0: number,
     x1: number,
     y1: number,
     z1: number,
+    w1: number,
     d: number,
 ): Q {
     let t0, t1;
@@ -93,12 +93,12 @@ export function slerp(
     } else {
         [t0, t1] = [1 - t, t];
     }
-    return [w0 * t0 + w1 * t1, x0 * t0 + x1 * t1, y0 * t0 + y1 * t1, z0 * t0 + z1 * t1];
+    return [x0 * t0 + x1 * t1, y0 * t0 + y1 * t1, z0 * t0 + z1 * t1, w0 * t0 + w1 * t1];
 }
 
 export function squad(q0: Q, q1: Q, q2: Q, q3: Q): (t: number) => Q {
-    const [q1w, q1x, q1y, q1z] = [q1[0], q1[1], q1[2], q1[3]];
-    let [q2w, q2x, q2y, q2z] = [q2[0], q2[1], q2[2], q2[3]];
+    const [q1x, q1y, q1z, q1w] = [q1[0], q1[1], q1[2], q1[3]];
+    let [q2x, q2y, q2z, q2w] = [q2[0], q2[1], q2[2], q2[3]];
 
     const [p0w, p0x, p0y, p0z] = controlRotation(q0[0], q0[1], q0[2], q0[3], q1w, q1x, q1y, q1z, q2w, q2x, q2y, q2z);
     let [p1w, p1x, p1y, p1z] = controlRotation(q1w, q1x, q1y, q1z, q2w, q2x, q2y, q2z, q3[0], q3[1], q3[2], q3[3]);
@@ -113,8 +113,8 @@ export function squad(q0: Q, q1: Q, q2: Q, q3: Q): (t: number) => Q {
     }
 
     return function (t: number) {
-        const [w0, x0, y0, z0] = slerp(t, q1w, q1x, q1y, q1z, q2w, q2x, q2y, q2z, dq);
-        const [w1, x1, y1, z1] = slerp(t, p0w, p0x, p0y, p0z, p1w, p1x, p1y, p1z, dp);
+        const [x0, y0, z0, w0] = slerp(t, q1x, q1y, q1z, q1w, q2x, q2y, q2z, dq, q2w);
+        const [x1, y1, z1, w1] = slerp(t, p0x, p0y, p0z, p0w, p1x, p1y, p1z, dp, p1w);
         return slerp(2 * t * (1 - t), w0, x0, y0, z0, w1, x1, y1, z1, w0 * w1 + x0 * x1 + y0 * y1 + z0 * z1);
     };
 }

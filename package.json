@@ -1,6 +1,6 @@
 {
   "name": "itinerarium",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "description": "",
   "main": "dist/main.js",
   "types": "types/main.d.ts",
