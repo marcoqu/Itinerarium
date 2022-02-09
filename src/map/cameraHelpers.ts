@@ -17,6 +17,12 @@ import {
     MercatorCoordinate,
 } from 'mapbox-gl';
 
+export type CameraPosition = Required<CameraOptions>;
+export type FreeCameraPosition = FreeCameraOptions & {
+    position: MercatorCoordinate;
+    orientation: [number, number, number, number];
+};
+
 export type coord2 = [number, number];
 export type coord3 = [number, number, number];
 
@@ -39,7 +45,7 @@ type Transform = {
     _mercatorZfromZoom(zoom: number): number;
     _zoomFromMercatorZ(z: number): number;
     clone(): Transform;
-    getFreeCameraOptions(): FreeCameraOptions;
+    getFreeCameraOptions(): FreeCameraPosition;
     setFreeCameraOptions(options: FreeCameraOptions): void;
 };
 
@@ -53,8 +59,13 @@ export function getCameraFromBoxAndBearing(
     bearing: number,
     padding?: PaddingOptions,
     maxZoom?: number,
-): FreeCameraOptions {
-    const cameraOptions = map.cameraForBounds(bounds, { bearing, padding, maxZoom });
+): FreeCameraPosition {
+    const opts = {
+        bearing,
+        ...(padding && { padding }),
+        ...(maxZoom && { maxZoom }),
+    };
+    const cameraOptions = map.cameraForBounds(bounds, opts);
     if (!cameraOptions) throw new Error('No valid camera found');
     return freeCameraOptionsFromCameraOptions(map, cameraOptions);
 }
@@ -66,7 +77,7 @@ export function getCameraFromCircleAndBearing(
     bearing: number,
     padding?: PaddingOptions,
     maxZoom?: number,
-): FreeCameraOptions {
+): FreeCameraPosition {
     const lngLat = LngLat.convert(center).toArray() as coord2;
     const box = _boundsFromCenterRadiusAndBearing(lngLat, radius, bearing);
     return getCameraFromBoxAndBearing(map, box, bearing, padding, maxZoom);
@@ -78,7 +89,7 @@ export function getCameraFromPositionAndTarget(
     cameraAltitude: number,
     targetLngLat?: LngLatLike,
     padding?: PaddingOptions,
-): FreeCameraOptions {
+): FreeCameraPosition {
     cameraLngLat = LngLat.convert(cameraLngLat).toArray() as coord2;
     targetLngLat = LngLat.convert(targetLngLat ?? cameraLngLat).toArray() as coord2;
     const bearing = turfBearing(cameraLngLat, targetLngLat);
@@ -114,7 +125,7 @@ export function resolvePadding(map: Map, padding: ExtendedPaddingOptions = {}): 
 
 // Check if solved:
 // https://github.com/mapbox/mapbox-gl-js/issues/10190
-export function freeCameraOptionsFromCameraOptions(map: Map, opts: CameraOptions): FreeCameraOptions {
+export function freeCameraOptionsFromCameraOptions(map: Map, opts: CameraOptions): FreeCameraPosition {
     const tr = (map as ExtendedMapGL).transform.clone();
     tr.center = opts.center as LngLatLike;
     tr.zoom = opts.zoom as number;
@@ -125,7 +136,7 @@ export function freeCameraOptionsFromCameraOptions(map: Map, opts: CameraOptions
 
 // Check if solved:
 // https://github.com/mapbox/mapbox-gl-js/issues/10190
-export function cameraOptionsFromFreeCameraOptions(map: Map, opts: FreeCameraOptions): CameraOptions {
+export function cameraOptionsFromFreeCameraOptions(map: Map, opts: FreeCameraOptions): CameraPosition {
     const tr = (map as ExtendedMapGL).transform.clone();
     tr.setFreeCameraOptions(opts);
     return {
@@ -134,6 +145,7 @@ export function cameraOptionsFromFreeCameraOptions(map: Map, opts: FreeCameraOpt
         bearing: tr.bearing,
         pitch: tr.pitch,
         padding: tr.padding,
+        around: tr.center,
     };
 }
 

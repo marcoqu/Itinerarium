@@ -6,7 +6,12 @@ import turfBearing from '@turf/bearing';
 import turfDistance from '@turf/distance';
 import { LngLat, LngLatBounds, MercatorCoordinate, } from 'mapbox-gl';
 export function getCameraFromBoxAndBearing(map, bounds, bearing, padding, maxZoom) {
-    const cameraOptions = map.cameraForBounds(bounds, { bearing, padding, maxZoom });
+    const opts = {
+        bearing,
+        ...(padding && { padding }),
+        ...(maxZoom && { maxZoom }),
+    };
+    const cameraOptions = map.cameraForBounds(bounds, opts);
     if (!cameraOptions)
         throw new Error('No valid camera found');
     return freeCameraOptionsFromCameraOptions(map, cameraOptions);
@@ -68,6 +73,7 @@ export function cameraOptionsFromFreeCameraOptions(map, opts) {
         bearing: tr.bearing,
         pitch: tr.pitch,
         padding: tr.padding,
+        around: tr.center,
     };
 }
 function _boundsFromCenterRadiusAndBearing(center, radius, bearing) {
