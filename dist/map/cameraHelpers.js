@@ -38,7 +38,7 @@ export function coordsFromFreeCameraOptions(opts) {
     if (!opts.position)
         throw new Error('position not defined');
     const lngLat = opts.position?.toLngLat();
-    return [lngLat.lat, lngLat.lng, opts.position?.toAltitude()];
+    return [lngLat.lng, lngLat.lat, opts.position?.toAltitude()];
 }
 export function coordsFromCameraOptions(map, opts) {
     return coordsFromFreeCameraOptions(freeCameraOptionsFromCameraOptions(map, opts));

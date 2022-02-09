@@ -1,5 +1,6 @@
 import { FreeCameraOptions, MercatorCoordinate } from 'mapbox-gl';
 import { Q } from './Squad';
+import { FreeCameraPosition } from './cameraHelpers';
 export declare type KeyFrame = {
     time: number;
     camera: FreeCameraOptions & {
@@ -14,5 +15,5 @@ export declare class CameraPath {
     private _squadInterpolator;
     private _timeInterpolator;
     constructor(keyFrames: KeyFrame[]);
-    getCameraAtTime(time: number): FreeCameraOptions;
+    getCameraAtTime(time: number): FreeCameraPosition;
 }

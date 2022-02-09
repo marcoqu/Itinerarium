@@ -106,7 +106,7 @@ export function getCameraFromPositionAndTarget(
 export function coordsFromFreeCameraOptions(opts: FreeCameraOptions): coord3 {
     if (!opts.position) throw new Error('position not defined');
     const lngLat = opts.position?.toLngLat();
-    return [lngLat.lat, lngLat.lng, opts.position?.toAltitude()];
+    return [lngLat.lng, lngLat.lat, opts.position?.toAltitude()];
 }
 
 export function coordsFromCameraOptions(map: Map, opts: CameraOptions): coord3 {
