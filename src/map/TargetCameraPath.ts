@@ -32,7 +32,7 @@ export class TargetCameraPath {
         );
 
         const positions = keyFrames.map((k) => k.camera.position);
-        const coords = positions.map((p) => [p.x, p.y, p.z] as [number, number, number]);
+        const coords = positions.map((p) => [...p.toLngLat().toArray(), p.toAltitude()] as [number, number, number]);
         this._positionInterpolator = new CurveInterpolator(coords, opts);
 
         const targets = keyFrames.map((k) => {
@@ -55,9 +55,11 @@ export class TargetCameraPath {
         const uTar = getTtoUmapping(t, this._targetInterpolator.arcLengths);
         const target = this._targetInterpolator.getPointAt(uTar) as [number, number, number];
 
-        return getCameraFromPositionAndTarget(this._map, [position[0], position[1]], position[2], [
-            target[0],
-            target[1],
-        ]);
+        return getCameraFromPositionAndTarget(
+            this._map,
+            [position[0], position[1]],
+            position[2],
+            [target[0], target[1]]
+        );
     }
 }

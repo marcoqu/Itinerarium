@@ -9,7 +9,7 @@ export class TargetCameraPath {
         const times = keyFrames.map((k) => k.time);
         this._timeInterpolator = new CurveInterpolator(times.map((t, i) => [t, i]), { tension: 0 });
         const positions = keyFrames.map((k) => k.camera.position);
-        const coords = positions.map((p) => [p.x, p.y, p.z]);
+        const coords = positions.map((p) => [...p.toLngLat().toArray(), p.toAltitude()]);
         this._positionInterpolator = new CurveInterpolator(coords, opts);
         const targets = keyFrames.map((k) => {
             const c = cameraOptionsFromFreeCameraOptions(this._map, k.camera).center;
@@ -28,10 +28,7 @@ export class TargetCameraPath {
         const position = this._positionInterpolator.getPointAt(uPos);
         const uTar = getTtoUmapping(t, this._targetInterpolator.arcLengths);
         const target = this._targetInterpolator.getPointAt(uTar);
-        return getCameraFromPositionAndTarget(this._map, [position[0], position[1]], position[2], [
-            target[0],
-            target[1],
-        ]);
+        return getCameraFromPositionAndTarget(this._map, [position[0], position[1]], position[2], [target[0], target[1]]);
     }
 }
 //# sourceMappingURL=TargetCameraPath.js.map
