@@ -3,6 +3,7 @@ import { CurveInterpolator } from 'curve-interpolator';
 import { SquadInterpolator } from './SquadInterpolator';
 import { Q } from './Squad';
 import { FreeCameraPosition } from './cameraHelpers';
+import { CurveInterpolatorOptions } from 'curve-interpolator/dist/src/curve-interpolator';
 
 export type KeyFrame = {
     time: number;
@@ -16,7 +17,7 @@ export class CameraPath {
     private _squadInterpolator: SquadInterpolator;
     private _timeInterpolator: CurveInterpolator;
 
-    public constructor(keyFrames: KeyFrame[]) {
+    public constructor(keyFrames: KeyFrame[], opts: CurveInterpolatorOptions = { tension: 0 }) {
         if (!keyFrames.length) throw new Error('Must have at least 1 camera position');
         this._frames = keyFrames;
 
@@ -24,7 +25,8 @@ export class CameraPath {
         this._timeInterpolator = new CurveInterpolator(times.map((t, i) => [t, i]));
 
         const positions = keyFrames.map((k) => k.camera.position);
-        this._positionInterpolator = new CurveInterpolator(positions.map((p) => [p.x, p.y, p.z]));
+        const coords = positions.map((p) => [p.x, p.y, p.z]);
+        this._positionInterpolator = new CurveInterpolator(coords, opts);
 
         const quaternions = keyFrames.map((k) => k.camera.orientation);
         this._squadInterpolator = new SquadInterpolator(quaternions);
