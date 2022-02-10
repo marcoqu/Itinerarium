@@ -1,5 +1,5 @@
 import { FreeCameraOptions, MercatorCoordinate } from 'mapbox-gl';
-import { CurveInterpolator } from 'curve-interpolator';
+import { CurveInterpolator, getTtoUmapping } from 'curve-interpolator';
 import { SquadInterpolator } from './SquadInterpolator';
 import { Q } from './Squad';
 import { FreeCameraPosition } from './cameraHelpers';
@@ -39,7 +39,8 @@ export class CameraPath {
         if (time >= this._extent[1]) return this._frames[this._frames.length - 1].camera;
 
         const t = (this._timeInterpolator.lookup(time, 0, 1)[1] as number) / (this._frames.length - 1);
-        const position = this._positionInterpolator.getPointAt(t) as [number, number, number];
+        const u = getTtoUmapping(t, this._positionInterpolator.arcLengths);
+        const position = this._positionInterpolator.getPointAt(u) as [number, number, number];
         const orientation = this._squadInterpolator.getQuaternionAt(t);
         return new FreeCameraOptions(new MercatorCoordinate(...position), orientation) as FreeCameraPosition;
     }
