@@ -170,11 +170,11 @@ function _pitchFromCoords(
     return (90 - deg) % 360;
 }
 
-// function _zoomToAltitude(lat: number, zoom: number): number {
-//     const merc = MercatorCoordinate.fromLngLat([0, lat]);
-//     merc.z = _mapGL.transform._mercatorZfromZoom(zoom);
-//     return merc.toAltitude();
-// }
+function _zoomToAltitude(map: Map, lat: number, zoom: number): number {
+    const merc = MercatorCoordinate.fromLngLat([0, lat]);
+    merc.z = (map as ExtendedMapGL).transform._mercatorZfromZoom(zoom);
+    return merc.toAltitude();
+}
 
 function _altitudeToZoom(map: Map, lat: number, altitude: number): number {
     const merc = MercatorCoordinate.fromLngLat([0, lat], altitude) as Required<MercatorCoordinate>;
@@ -189,52 +189,3 @@ function _resolvePercent(value: string | number | undefined, full: number): numb
     if (Number.isNaN(result)) throw new Error(`Invalid value: ${value}`);
     return result;
 }
-
-// ===================================
-
-// export function async ready(): Promise<void> {
-//     if (_mapGL.loaded()) return;
-//     if (_mapGL.isStyleLoaded()) return;
-//     return new Promise((resolve, reject) => {
-//         const onDataEvent = async () => {
-//             await ready();
-//             resolve();
-//         };
-//         const onError = () => {
-//             console.error('Map Loading error');
-//             reject();
-//         };
-//         _mapGL.once('styledata', onDataEvent);
-//         _mapGL.once('load', onDataEvent);
-//         _mapGL.once('error', onError);
-//     });
-// }
-
-// export function setInteractive(interactive: boolean): void {
-//     const action = interactive ? 'enable' : 'disable';
-//     _mapGL.scrollZoom[action]();
-//     _mapGL.boxZoom[action]();
-//     _mapGL.dragRotate[action]();
-//     _mapGL.dragPan[action]();
-//     _mapGL.keyboard[action]();
-//     _mapGL.doubleClickZoom[action]();
-//     _mapGL.touchZoomRotate[action]();
-// }
-
-// export function update3D(): void {
-//     // if (!_mapGL || !_mapGL.loaded()) throw new Error('Map not initialized yet');
-//     _mapGL.triggerRepaint();
-// }
-
-// export function async flyTo(options: FlyToOptions): Promise<void> {
-//     return new Promise((resolve) => {
-//         if (!_mapGL) throw new Error('Map not initialized yet');
-//         const onMoveEnd = (): void => {
-//             if (!_mapGL) throw new Error('Map not initialized yet');
-//             resolve();
-//             _mapGL.off('moveend', onMoveEnd);
-//         };
-//         _mapGL.on('moveend', onMoveEnd);
-//         _mapGL.flyTo(options);
-//     });
-// }

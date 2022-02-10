@@ -23,7 +23,6 @@ export class Scroller {
         this.disable();
         this._scrollControl.enable();
         this._scrollControl.positionChanged.attach(this._contentManager, (v) => this._contentManager.setPosition(v));
-        this._scrollControl.destinationChanged.attach(this, (v) => this._onDestinationChanged(v));
     }
     disable() {
         this._scrollControl.disable();
@@ -31,44 +30,13 @@ export class Scroller {
         this._scrollControl.destinationChanged.detach(this);
     }
     addContent(content, position) {
-        try {
-            content.seek?.attach(this, (v) => this._onSeeked(v, 500));
-            this._contentManager.addContent(content, position);
-            this._scrollControl.setBounds(this._contentManager.getExtent());
-            return content;
-        }
-        catch (error) {
-            console.error(error);
-            throw error;
-        }
-    }
-    setSnapPositions(snapPositions) {
-        this._scrollControl.setSnapPositions(snapPositions);
-    }
-    getSnapPositions() {
-        return this._scrollControl.getSnapPositions();
-    }
-    setScrollOptions(opts) {
-        this._scrollControl.setOptions(opts);
-    }
-    getScrollOptions() {
-        return this._scrollControl.getOptions();
-    }
-    _onSeeked(time, offset) {
-        if (offset !== undefined) {
-            const direction = Math.sign(time - this._scrollControl.getPosition());
-            this._scrollControl.setPosition(time - offset * direction);
-        }
-        this._scrollControl.setDestination(time);
-    }
-    _onDestinationChanged(time) {
-        this._contentManager.getContents().forEach((c) => c.setDestination?.(time));
+        this._contentManager.addContent(content, position);
+        this._scrollControl.setBounds(this._contentManager.getExtent());
+        return content;
     }
     reset() {
         // reset scroll control
         this._scrollControl.reset();
-        // destroy contents
-        this._contentManager.getContents().forEach((c) => c.destroy?.());
         // reset content manager
         this._contentManager.reset();
     }

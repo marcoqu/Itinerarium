@@ -1,10 +1,10 @@
 export * as cameraHelpers from './map/cameraHelpers';
 export { CameraPath } from './map/CameraPath';
+export { TargetCameraPath } from './map/TargetCameraPath';
 
 export { Scroller } from './scroller/Scroller';
 export { ScriptLoader } from './scriptloader/ScriptLoader';
 export { ScriptData } from './scriptloader/ScriptData';
-export { IScrollerContent } from './scroller/IScrollerContent';
 export { ContentManager } from './contentmanager/ContentManager';
 export {
     IContent,

@@ -1,7 +1,7 @@
+import { IContent } from 'main';
 import { ContentManager } from '../contentmanager/ContentManager';
-import { ScrollControl, ScrollControlOptions } from '../scrollcontrol/ScrollControl';
-import { IScrollerContent } from './IScrollerContent';
-export declare class Scroller<ContentT extends IScrollerContent = IScrollerContent> {
+import { ScrollControl } from '../scrollcontrol/ScrollControl';
+export declare class Scroller<ContentT extends IContent = IContent> {
     private _scrollArea;
     private _scrollControl;
     private _contentManager;
@@ -11,11 +11,5 @@ export declare class Scroller<ContentT extends IScrollerContent = IScrollerConte
     enable(): void;
     disable(): void;
     addContent(content: ContentT, position?: number): ContentT;
-    setSnapPositions(snapPositions: number[]): void;
-    getSnapPositions(): number[];
-    setScrollOptions(opts: ScrollControlOptions): void;
-    getScrollOptions(): ScrollControlOptions;
-    private _onSeeked;
-    private _onDestinationChanged;
     reset(): void;
 }

@@ -47,9 +47,9 @@ export class ScriptLoader {
         }
         // set up scroll control
         if (scriptData.snapPositions)
-            this._mapScroller.setSnapPositions(scriptData.snapPositions);
+            this._mapScroller.scrollControl.setSnapPositions(scriptData.snapPositions);
         if (scriptData.speed)
-            this._mapScroller.setScrollOptions({ speedFactor: scriptData.speed });
+            this._mapScroller.scrollControl.setOptions({ speedFactor: scriptData.speed });
     }
 }
 ScriptLoader.PRELOADING_TIME = 5000;

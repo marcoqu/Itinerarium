@@ -1,12 +1,11 @@
 import { Scroller } from '../scroller/Scroller';
-import { IScrollerContent } from '../scroller/IScrollerContent';
 import { ScriptData } from './ScriptData';
 import { timeout } from '../utils/timeout';
-import { IContentData } from '../contentmanager/IContent';
+import { IContent, IContentData } from '../contentmanager/IContent';
 
 export type CreatorFn<ContentT> = (data: IContentData) => Promise<ContentT>;
 
-export class ScriptLoader<ContentT extends IScrollerContent = IScrollerContent> {
+export class ScriptLoader<ContentT extends IContent = IContent> {
     private static readonly PRELOADING_TIME = 5000;
     private _mapScroller: Scroller<ContentT>;
     private _creatorFn: CreatorFn<ContentT>;
@@ -57,7 +56,7 @@ export class ScriptLoader<ContentT extends IScrollerContent = IScrollerContent> 
         }
 
         // set up scroll control
-        if (scriptData.snapPositions) this._mapScroller.setSnapPositions(scriptData.snapPositions);
-        if (scriptData.speed) this._mapScroller.setScrollOptions({ speedFactor: scriptData.speed });
+        if (scriptData.snapPositions) this._mapScroller.scrollControl.setSnapPositions(scriptData.snapPositions);
+        if (scriptData.speed) this._mapScroller.scrollControl.setOptions({ speedFactor: scriptData.speed });
     }
 }
