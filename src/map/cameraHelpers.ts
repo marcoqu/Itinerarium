@@ -127,7 +127,7 @@ export function resolvePadding(map: Map, padding: ExtendedPaddingOptions = {}): 
 // https://github.com/mapbox/mapbox-gl-js/issues/10190
 export function freeCameraOptionsFromCameraOptions(map: Map, opts: CameraOptions): FreeCameraPosition {
     const tr = (map as ExtendedMapGL).transform.clone();
-    tr.center = opts.center as LngLatLike;
+    tr.center = LngLat.convert(opts.center as LngLatLike);
     tr.zoom = opts.zoom as number;
     tr.bearing = opts.bearing ?? 0;
     tr.pitch = opts.pitch ?? 0;
