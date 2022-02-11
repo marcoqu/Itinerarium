@@ -85,7 +85,7 @@ function _boundsFromCenterRadiusAndBearing(center, radius, bearing) {
     return new LngLatBounds([vertices[0], vertices[2]]);
 }
 function _pitchFromCoords(cameraCoords, cameraAltitude, targetCoords, targetAltitude = 0) {
-    const groundDistance = turfDistance(cameraCoords, targetCoords);
+    const groundDistance = turfDistance(cameraCoords, targetCoords) * 1000;
     const rad = Math.atan2(cameraAltitude - targetAltitude, groundDistance);
     const deg = rad / (Math.PI / 180);
     return (90 - deg) % 360;

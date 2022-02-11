@@ -164,7 +164,7 @@ function _pitchFromCoords(
     targetCoords: coord2,
     targetAltitude = 0,
 ): number {
-    const groundDistance = turfDistance(cameraCoords, targetCoords);
+    const groundDistance = turfDistance(cameraCoords, targetCoords) * 1000;
     const rad = Math.atan2(cameraAltitude - targetAltitude, groundDistance);
     const deg = rad / (Math.PI / 180);
     return (90 - deg) % 360;
