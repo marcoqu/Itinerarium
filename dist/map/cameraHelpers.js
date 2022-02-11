@@ -28,7 +28,7 @@ export function getCameraFromPositionAndTarget(map, cameraLngLat, cameraAltitude
     const pitch = _pitchFromCoords(cameraLngLat, cameraAltitude, targetLngLat);
     return freeCameraOptionsFromCameraOptions(map, {
         center: cameraLngLat,
-        zoom: _altitudeToZoom(map, cameraLngLat[0], cameraAltitude),
+        zoom: _altitudeToZoom(map, cameraLngLat[1], cameraAltitude),
         pitch,
         bearing,
         padding,
