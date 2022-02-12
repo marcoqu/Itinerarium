@@ -9,13 +9,10 @@ import {
     Map,
     LngLat,
     LngLatLike,
-    LngLatBounds,
-    LngLatBoundsLike,
     CameraOptions,
     FreeCameraOptions,
     PaddingOptions,
     MercatorCoordinate,
-    AnimationOptions,
 } from 'mapbox-gl';
 
 export type CameraPosition = Required<CameraOptions>;
@@ -52,8 +49,8 @@ type Transform = {
         options?: CameraOptions,
     ): undefined | CameraPosition;
     clone(): Transform;
-    // getFreeCameraOptions(): FreeCameraPosition;
-    // setFreeCameraOptions(options: FreeCameraOptions): void;
+    getFreeCameraOptions(): FreeCameraPosition;
+    setFreeCameraOptions(options: FreeCameraOptions): void;
 };
 
 interface ExtendedMapGL extends Map {
