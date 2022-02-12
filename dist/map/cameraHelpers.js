@@ -7,7 +7,7 @@ import turfDistance from '@turf/distance';
 import { LngLat, MercatorCoordinate, } from 'mapbox-gl';
 export function getCameraFromBoxAndBearing(map, box, bearing, padding, maxZoom) {
     const opts = { ...(padding && { padding }), ...(maxZoom && { maxZoom }) };
-    const cameraOptions = map.transform._cameraForBoxAndBearing(box[0], box[1], bearing, opts);
+    const cameraOptions = map._cameraForBoxAndBearing(box[0], box[1], bearing, opts);
     if (!cameraOptions)
         throw new Error('No valid camera found');
     return freeCameraOptionsFromCameraOptions(map, cameraOptions);

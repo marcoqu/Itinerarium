@@ -42,12 +42,6 @@ type Transform = {
     padding: PaddingOptions;
     _mercatorZfromZoom(zoom: number): number;
     _zoomFromMercatorZ(z: number): number;
-    _cameraForBoxAndBearing(
-        p0: LngLatLike,
-        p1: LngLatLike,
-        bearing: number,
-        options?: CameraOptions,
-    ): undefined | CameraPosition;
     clone(): Transform;
     getFreeCameraOptions(): FreeCameraPosition;
     setFreeCameraOptions(options: FreeCameraOptions): void;
@@ -55,6 +49,12 @@ type Transform = {
 
 interface ExtendedMapGL extends Map {
     transform: Transform;
+    _cameraForBoxAndBearing(
+        p0: LngLatLike,
+        p1: LngLatLike,
+        bearing: number,
+        options?: CameraOptions,
+    ): undefined | CameraPosition;
 }
 
 export function getCameraFromBoxAndBearing(
@@ -65,7 +65,7 @@ export function getCameraFromBoxAndBearing(
     maxZoom?: number,
 ): FreeCameraPosition {
     const opts = { ...(padding && { padding }), ...(maxZoom && { maxZoom }) };
-    const cameraOptions = (map as ExtendedMapGL).transform._cameraForBoxAndBearing(box[0], box[1], bearing, opts);
+    const cameraOptions = (map as ExtendedMapGL)._cameraForBoxAndBearing(box[0], box[1], bearing, opts);
     if (!cameraOptions) throw new Error('No valid camera found');
     return freeCameraOptionsFromCameraOptions(map, cameraOptions);
 }
