@@ -59,7 +59,7 @@ interface ExtendedMapGL extends Map {
 
 export function getCameraFromBoxAndBearing(
     map: Map,
-    box: [LngLat, LngLat],
+    box: [LngLatLike, LngLatLike],
     bearing: number,
     padding?: PaddingOptions,
     maxZoom?: number,
