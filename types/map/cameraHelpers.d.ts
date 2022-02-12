@@ -1,4 +1,4 @@
-import { Map, LngLatLike, LngLatBoundsLike, CameraOptions, FreeCameraOptions, PaddingOptions, MercatorCoordinate } from 'mapbox-gl';
+import { Map, LngLat, LngLatLike, CameraOptions, FreeCameraOptions, PaddingOptions, MercatorCoordinate } from 'mapbox-gl';
 export declare type CameraPosition = Required<CameraOptions>;
 export declare type FreeCameraPosition = FreeCameraOptions & {
     position: MercatorCoordinate;
@@ -12,7 +12,7 @@ export declare type ExtendedPaddingOptions = {
     left?: number | string;
     right?: number | string;
 };
-export declare function getCameraFromBoxAndBearing(map: Map, bounds: LngLatBoundsLike, bearing: number, padding?: PaddingOptions, maxZoom?: number): FreeCameraPosition;
+export declare function getCameraFromBoxAndBearing(map: Map, box: [LngLat, LngLat], bearing: number, padding?: PaddingOptions, maxZoom?: number): FreeCameraPosition;
 export declare function getCameraFromCircleAndBearing(map: Map, center: LngLatLike, radius: number, bearing: number, padding?: PaddingOptions, maxZoom?: number): FreeCameraPosition;
 export declare function getCameraFromPositionAndTarget(map: Map, cameraLngLat: LngLatLike, cameraAltitude: number, targetLngLat?: LngLatLike, padding?: PaddingOptions): FreeCameraPosition;
 export declare function coordsFromFreeCameraOptions(opts: FreeCameraOptions): coord3;

@@ -4,21 +4,17 @@ import turfCircle from '@turf/circle';
 import turfTransformRotate from '@turf/transform-rotate';
 import turfBearing from '@turf/bearing';
 import turfDistance from '@turf/distance';
-import { LngLat, LngLatBounds, MercatorCoordinate, } from 'mapbox-gl';
-export function getCameraFromBoxAndBearing(map, bounds, bearing, padding, maxZoom) {
-    const opts = {
-        bearing,
-        ...(padding && { padding }),
-        ...(maxZoom && { maxZoom }),
-    };
-    const cameraOptions = map.cameraForBounds(bounds, opts);
+import { LngLat, MercatorCoordinate, } from 'mapbox-gl';
+export function getCameraFromBoxAndBearing(map, box, bearing, padding, maxZoom) {
+    const opts = { ...(padding && { padding }), ...(maxZoom && { maxZoom }) };
+    const cameraOptions = map.transform._cameraForBoxAndBearing(box[0], box[1], bearing, opts);
     if (!cameraOptions)
         throw new Error('No valid camera found');
     return freeCameraOptionsFromCameraOptions(map, cameraOptions);
 }
 export function getCameraFromCircleAndBearing(map, center, radius, bearing, padding, maxZoom) {
     const lngLat = LngLat.convert(center).toArray();
-    const box = _boundsFromCenterRadiusAndBearing(lngLat, radius, bearing);
+    const box = _boxFromCenterRadiusAndBearing(lngLat, radius, bearing);
     return getCameraFromBoxAndBearing(map, box, bearing, padding, maxZoom);
 }
 export function getCameraFromPositionAndTarget(map, cameraLngLat, cameraAltitude, targetLngLat, padding) {
@@ -76,13 +72,13 @@ export function cameraOptionsFromFreeCameraOptions(map, opts) {
         around: tr.center,
     };
 }
-function _boundsFromCenterRadiusAndBearing(center, radius, bearing) {
+function _boxFromCenterRadiusAndBearing(center, radius, bearing) {
     const circle = turfCircle(center, radius, { units: 'kilometers' });
     const bbox = turfBbox(circle);
     const bboxPolygon = turfBboxPolygon(bbox);
     const rotatedPolygon = turfTransformRotate(bboxPolygon, bearing);
     const vertices = rotatedPolygon.geometry.coordinates[0].slice(0, 4);
-    return new LngLatBounds([vertices[0], vertices[2]]);
+    return [LngLat.convert(vertices[0]), LngLat.convert(vertices[2])];
 }
 function _pitchFromCoords(cameraCoords, cameraAltitude, targetCoords, targetAltitude = 0) {
     const groundDistance = turfDistance(cameraCoords, targetCoords) * 1000;

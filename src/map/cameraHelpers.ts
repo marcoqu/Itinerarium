@@ -15,6 +15,7 @@ import {
     FreeCameraOptions,
     PaddingOptions,
     MercatorCoordinate,
+    AnimationOptions,
 } from 'mapbox-gl';
 
 export type CameraPosition = Required<CameraOptions>;
@@ -44,9 +45,15 @@ type Transform = {
     padding: PaddingOptions;
     _mercatorZfromZoom(zoom: number): number;
     _zoomFromMercatorZ(z: number): number;
+    _cameraForBoxAndBearing(
+        p0: LngLatLike,
+        p1: LngLatLike,
+        bearing: number,
+        options?: CameraOptions,
+    ): undefined | CameraPosition;
     clone(): Transform;
-    getFreeCameraOptions(): FreeCameraPosition;
-    setFreeCameraOptions(options: FreeCameraOptions): void;
+    // getFreeCameraOptions(): FreeCameraPosition;
+    // setFreeCameraOptions(options: FreeCameraOptions): void;
 };
 
 interface ExtendedMapGL extends Map {
@@ -55,17 +62,13 @@ interface ExtendedMapGL extends Map {
 
 export function getCameraFromBoxAndBearing(
     map: Map,
-    bounds: LngLatBoundsLike,
+    box: [LngLat, LngLat],
     bearing: number,
     padding?: PaddingOptions,
     maxZoom?: number,
 ): FreeCameraPosition {
-    const opts = {
-        bearing,
-        ...(padding && { padding }),
-        ...(maxZoom && { maxZoom }),
-    };
-    const cameraOptions = map.cameraForBounds(bounds, opts);
+    const opts = { ...(padding && { padding }), ...(maxZoom && { maxZoom }) };
+    const cameraOptions = (map as ExtendedMapGL).transform._cameraForBoxAndBearing(box[0], box[1], bearing, opts);
     if (!cameraOptions) throw new Error('No valid camera found');
     return freeCameraOptionsFromCameraOptions(map, cameraOptions);
 }
@@ -79,7 +82,7 @@ export function getCameraFromCircleAndBearing(
     maxZoom?: number,
 ): FreeCameraPosition {
     const lngLat = LngLat.convert(center).toArray() as coord2;
-    const box = _boundsFromCenterRadiusAndBearing(lngLat, radius, bearing);
+    const box = _boxFromCenterRadiusAndBearing(lngLat, radius, bearing);
     return getCameraFromBoxAndBearing(map, box, bearing, padding, maxZoom);
 }
 
@@ -149,13 +152,13 @@ export function cameraOptionsFromFreeCameraOptions(map: Map, opts: FreeCameraOpt
     };
 }
 
-function _boundsFromCenterRadiusAndBearing(center: coord2, radius: number, bearing: number): LngLatBounds {
+function _boxFromCenterRadiusAndBearing(center: coord2, radius: number, bearing: number): [LngLat, LngLat] {
     const circle = turfCircle(center, radius, { units: 'kilometers' });
     const bbox = turfBbox(circle);
     const bboxPolygon = turfBboxPolygon(bbox);
     const rotatedPolygon = turfTransformRotate(bboxPolygon, bearing);
     const vertices = rotatedPolygon.geometry.coordinates[0].slice(0, 4) as coord2[];
-    return new LngLatBounds([vertices[0], vertices[2]]);
+    return [LngLat.convert(vertices[0]), LngLat.convert(vertices[2])];
 }
 
 function _pitchFromCoords(
