@@ -20,3 +20,5 @@ export declare function coordsFromCameraOptions(map: Map, opts: CameraOptions): 
 export declare function resolvePadding(map: Map, padding?: ExtendedPaddingOptions): PaddingOptions;
 export declare function freeCameraOptionsFromCameraOptions(map: Map, opts: CameraOptions): FreeCameraPosition;
 export declare function cameraOptionsFromFreeCameraOptions(map: Map, opts: FreeCameraOptions): CameraPosition;
+export declare function zoomToAltitude(map: Map, lat: number, zoom: number): number;
+export declare function altitudeToZoom(map: Map, lat: number, altitude: number): number;

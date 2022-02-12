@@ -28,7 +28,7 @@ export function getCameraFromPositionAndTarget(map, cameraLngLat, cameraAltitude
     const pitch = _pitchFromCoords(cameraLngLat, cameraAltitude, targetLngLat);
     return freeCameraOptionsFromCameraOptions(map, {
         center: cameraLngLat,
-        zoom: _altitudeToZoom(map, cameraLngLat[1], cameraAltitude),
+        zoom: altitudeToZoom(map, cameraLngLat[1], cameraAltitude),
         pitch,
         bearing,
         padding,
@@ -90,12 +90,12 @@ function _pitchFromCoords(cameraCoords, cameraAltitude, targetCoords, targetAlti
     const deg = rad / (Math.PI / 180);
     return (90 - deg) % 360;
 }
-function _zoomToAltitude(map, lat, zoom) {
+export function zoomToAltitude(map, lat, zoom) {
     const merc = MercatorCoordinate.fromLngLat([0, lat]);
     merc.z = map.transform._mercatorZfromZoom(zoom);
     return merc.toAltitude();
 }
-function _altitudeToZoom(map, lat, altitude) {
+export function altitudeToZoom(map, lat, altitude) {
     const merc = MercatorCoordinate.fromLngLat([0, lat], altitude);
     return map.transform._zoomFromMercatorZ(merc.z);
 }
