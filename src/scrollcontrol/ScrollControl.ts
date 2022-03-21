@@ -36,6 +36,7 @@ export class ScrollControl {
         speedFactor: 1,
         dragSpeed: 5,
         wheelSpeed: 75,
+        throttleMs: 100,
         snapThreshold: 0,
         keySpeed: 10,
         waitTime: 200,

@@ -28,5 +28,5 @@ export declare class MapScroller<ContentT extends IMapScrollerContent = IMapScro
     ready(): Promise<void>;
     private _onSeeked;
     private _onDestinationChanged;
-    reset(): Promise<void>;
+    reset(): void;
 }

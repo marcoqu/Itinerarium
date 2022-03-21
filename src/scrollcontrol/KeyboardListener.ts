@@ -1,7 +1,7 @@
 // Copyright 2018 ISI Foundation
 
 import { SyncEvent } from 'ts-events';
-import { rafThrottle } from './rafThrottle';
+import { rafThrottle } from './throttle';
 
 export type KeyboardListenerOptions = {
     keySpeed?: number;

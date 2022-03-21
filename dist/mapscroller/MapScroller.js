@@ -96,7 +96,7 @@ export class MapScroller {
     _onDestinationChanged(time) {
         this._contentManager.getContents().forEach((c) => c.setDestination?.(time));
     }
-    async reset() {
+    reset() {
         // disable scroll control
         this._scrollControl.disable();
         this._scrollControl.setPosition(0);
@@ -107,7 +107,7 @@ export class MapScroller {
         this._contents = [];
         // reset content manager
         this._contentManager.extentChanged.detach(this);
-        await this._contentManager.reset();
+        this._contentManager.reset();
     }
 }
 //# sourceMappingURL=MapScroller.js.map

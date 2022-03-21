@@ -1,6 +1,6 @@
 // Copyright 2018 ISI Foundation
 import { SyncEvent } from 'ts-events';
-import { rafThrottle } from './rafThrottle';
+import { rafThrottle } from './throttle';
 export class KeyboardListener {
     constructor(options = {}) {
         this.movedBy = new SyncEvent();
