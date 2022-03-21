@@ -6,12 +6,13 @@ import { timeThrottle } from './throttle';
 export type WheelListenerOptions = {
     wheelSpeed?: number;
     throttleMs?: number;
+    minDeltaY?: number;
 };
 
 export class WheelListener {
     public movedBy = new SyncEvent<number>();
 
-    private _options: Required<WheelListenerOptions> = { wheelSpeed: 75, throttleMs: 100 };
+    private _options: Required<WheelListenerOptions> = { wheelSpeed: 75, throttleMs: 100, minDeltaY: 10 };
 
     public constructor(element: HTMLElement, options: WheelListenerOptions = {}) {
         this._options = { ...this._options, ...options };
@@ -21,6 +22,8 @@ export class WheelListener {
 
     private _onWheel(e: WheelEvent): void {
         e.preventDefault();
+        // filter out small trackpad delta values
+        if (Math.abs(e.deltaY) < this._options.minDeltaY) return;
         // discard delta and just use sign
         const sign = Math.sign(e.deltaY);
         this.movedBy.post(sign * this._options.wheelSpeed);
