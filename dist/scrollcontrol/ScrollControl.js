@@ -44,9 +44,9 @@ export class ScrollControl {
     }
     setOptions(options) {
         this._options = { ...this._options, ...options };
-        this._wheelListener.setOptions(this._options);
-        this._dragListener.setOptions(this._options);
-        this._keyboardListener.setOptions(this._options);
+        this._wheelListener?.setOptions(this._options);
+        this._dragListener?.setOptions(this._options);
+        this._keyboardListener?.setOptions(this._options);
     }
     getOptions() {
         return this._options;

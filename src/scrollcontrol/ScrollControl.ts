@@ -101,9 +101,9 @@ export class ScrollControl {
 
     public setOptions(options: ScrollControlOptions): void {
         this._options = { ...this._options, ...options };
-        this._wheelListener.setOptions(this._options);
-        this._dragListener.setOptions(this._options);
-        this._keyboardListener.setOptions(this._options);
+        this._wheelListener?.setOptions(this._options);
+        this._dragListener?.setOptions(this._options);
+        this._keyboardListener?.setOptions(this._options);
     }
 
     public getOptions(): ScrollControlOptions {
