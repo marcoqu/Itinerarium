@@ -5,7 +5,6 @@ export class DragListener {
         this.movedBy = new SyncEvent();
         this._options = { dragSpeed: 5 };
         this._element = element;
-        this._options = { ...this._options, ...options };
         this._element.addEventListener('mousedown', (e) => this._onMouseDown(e), { passive: true });
         this._element.addEventListener('mousemove', (e) => this._onMouseMove(e), { passive: true });
         this._element.addEventListener('mouseup', () => this._onMouseUp(), { passive: true });
@@ -15,6 +14,10 @@ export class DragListener {
         this._element.addEventListener('touchstart', (e) => this._onMouseDown(e), { passive: false });
         this._element.addEventListener('touchmove', (e) => this._onMouseMove(e), { passive: false });
         this._element.addEventListener('touchend', () => this._onMouseUp(), { passive: false });
+        this.setOptions(options);
+    }
+    setOptions(options) {
+        this._options = { ...this._options, ...options };
     }
     _onMouseDown(e) {
         this._mouseY = this._getMouseorTouchY(e);

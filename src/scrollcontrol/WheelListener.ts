@@ -1,9 +1,12 @@
 // Copyright 2018 ISI Foundation
 
 import { SyncEvent } from 'ts-events';
-import { rafThrottle } from './rafThrottle';
 
-export type WheelListenerOptions = { wheelSpeed?: number };
+export type WheelListenerOptions = {
+    wheelSpeed?: number;
+};
+
+type UnnormalizedWheelEvent = WheelEvent & Record<string, number>;
 
 export class WheelListener {
     public movedBy = new SyncEvent<number>();
@@ -11,15 +14,28 @@ export class WheelListener {
     private _options: Required<WheelListenerOptions> = { wheelSpeed: 75 };
 
     public constructor(element: HTMLElement, options: WheelListenerOptions = {}) {
+        element.addEventListener('wheel', (e: WheelEvent) => this._onWheel(e));
+        this.setOptions(options);
+    }
+
+    public setOptions(options: WheelListenerOptions): void {
         this._options = { ...this._options, ...options };
-        const throttledOnWheel = rafThrottle((e: WheelEvent) => this._onWheel(e));
-        element.addEventListener('wheel', throttledOnWheel);
     }
 
     private _onWheel(e: WheelEvent): void {
         e.preventDefault();
-        // discard delta and just use sign
-        const sign = Math.sign(e.deltaY);
-        this.movedBy.post(sign * this._options.wheelSpeed);
+        const deltaY = this._getNormalizedDeltaY(e as UnnormalizedWheelEvent);
+        this.movedBy.post(deltaY * this._options.wheelSpeed);
+    }
+
+    // from: https://github.com/basilfx/normalize-wheel
+    private _getNormalizedDeltaY(event: UnnormalizedWheelEvent): number {
+        let spinY = 0;
+        if ('detail' in event) spinY = event.detail;
+        if ('wheelDelta' in event) spinY = -event.wheelDelta / 120;
+        if ('wheelDeltaY' in event) spinY = -event.wheelDeltaY / 120;
+        if ('axis' in event && event.axis === event.HORIZONTAL_AXIS) spinY = 0;
+        if (event.deltaY && !spinY) spinY = event.deltaY < 1 ? -1 : 1;
+        return spinY;
     }
 }

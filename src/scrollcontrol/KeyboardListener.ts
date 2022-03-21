@@ -1,25 +1,35 @@
 // Copyright 2018 ISI Foundation
 
 import { SyncEvent } from 'ts-events';
-import { rafThrottle } from './rafThrottle';
+import { timeThrottle } from './throttle';
 
 export type KeyboardListenerOptions = {
     keySpeed?: number;
     keySpeedFast?: number;
+    keyThrottleDelay?: number;
 };
 
 export class KeyboardListener {
     public movedBy = new SyncEvent<number>();
 
+    private _throttledOnKeyDown?: (e: KeyboardEvent) => void;
     private _options: Required<KeyboardListenerOptions> = {
         keySpeed: 75,
         keySpeedFast: 75,
+        keyThrottleDelay: 100,
     };
 
     public constructor(options: KeyboardListenerOptions = {}) {
+        document.body.addEventListener('keydown', (e: KeyboardEvent) => this._throttledOnKeyDown?.(e));
+        this.setOptions(options);
+    }
+
+    public setOptions(options: KeyboardListenerOptions): void {
         this._options = { ...this._options, ...options };
-        const throttledOnKeyDown = rafThrottle((e: KeyboardEvent) => this._onKeyDown(e));
-        document.body.addEventListener('keydown', throttledOnKeyDown);
+        this._throttledOnKeyDown = timeThrottle(
+            (e: KeyboardEvent) => this._onKeyDown(e),
+            this._options.keyThrottleDelay,
+        );
     }
 
     private _onKeyDown(e: KeyboardEvent): void {

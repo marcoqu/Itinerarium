@@ -8,6 +8,7 @@ export declare class DragListener {
     private _mouseY?;
     private _options;
     constructor(element: HTMLElement, options?: DragListenerOptions);
+    setOptions(options: DragListenerOptions): void;
     private _onMouseDown;
     private _onMouseMove;
     private _onMouseUp;
