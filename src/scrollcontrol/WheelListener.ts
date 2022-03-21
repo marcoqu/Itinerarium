@@ -14,8 +14,12 @@ export class WheelListener {
     private _options: Required<WheelListenerOptions> = { wheelSpeed: 75 };
 
     public constructor(element: HTMLElement, options: WheelListenerOptions = {}) {
-        this._options = { ...this._options, ...options };
         element.addEventListener('wheel', (e: WheelEvent) => this._onWheel(e));
+        this.setOptions(options);
+    }
+
+    public setOptions(options: WheelListenerOptions): void {
+        this._options = { ...this._options, ...options };
     }
 
     private _onWheel(e: WheelEvent): void {

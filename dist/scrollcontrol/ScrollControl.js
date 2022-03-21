@@ -44,6 +44,9 @@ export class ScrollControl {
     }
     setOptions(options) {
         this._options = { ...this._options, ...options };
+        this._wheelListener.setOptions(this._options);
+        this._dragListener.setOptions(this._options);
+        this._keyboardListener.setOptions(this._options);
     }
     getOptions() {
         return this._options;
@@ -175,8 +178,9 @@ ScrollControl.DEFAULT_OPTIONS = {
     wheelSpeed: 75,
     snapThreshold: 0,
     keySpeed: 10,
-    waitTime: 200,
     keySpeedFast: 100,
+    keyThrottleDelay: 100,
+    waitTime: 200,
 };
 export function noEasing(prevDestination, destination) {
     return () => destination;

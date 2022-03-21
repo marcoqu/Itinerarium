@@ -13,7 +13,6 @@ export class DragListener {
 
     public constructor(element: HTMLElement, options: DragListenerOptions = {}) {
         this._element = element;
-        this._options = { ...this._options, ...options };
 
         this._element.addEventListener('mousedown', (e) => this._onMouseDown(e), { passive: true });
         this._element.addEventListener('mousemove', (e) => this._onMouseMove(e), { passive: true });
@@ -25,6 +24,12 @@ export class DragListener {
         this._element.addEventListener('touchstart', (e) => this._onMouseDown(e), { passive: false });
         this._element.addEventListener('touchmove', (e) => this._onMouseMove(e), { passive: false });
         this._element.addEventListener('touchend', () => this._onMouseUp(), { passive: false });
+
+        this.setOptions(options);
+    }
+
+    public setOptions(options: DragListenerOptions): void {
+        this._options = { ...this._options, ...options };
     }
 
     private _onMouseDown(e: MouseEvent | TouchEvent): void {

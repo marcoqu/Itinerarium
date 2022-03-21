@@ -4,8 +4,11 @@ export class WheelListener {
     constructor(element, options = {}) {
         this.movedBy = new SyncEvent();
         this._options = { wheelSpeed: 75 };
-        this._options = { ...this._options, ...options };
         element.addEventListener('wheel', (e) => this._onWheel(e));
+        this.setOptions(options);
+    }
+    setOptions(options) {
+        this._options = { ...this._options, ...options };
     }
     _onWheel(e) {
         e.preventDefault();

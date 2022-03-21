@@ -38,8 +38,9 @@ export class ScrollControl {
         wheelSpeed: 75,
         snapThreshold: 0,
         keySpeed: 10,
-        waitTime: 200,
         keySpeedFast: 100,
+        keyThrottleDelay: 100,
+        waitTime: 200,
     };
 
     public boundsChanged = new SyncEvent<[number, number]>();
@@ -100,6 +101,9 @@ export class ScrollControl {
 
     public setOptions(options: ScrollControlOptions): void {
         this._options = { ...this._options, ...options };
+        this._wheelListener.setOptions(this._options);
+        this._dragListener.setOptions(this._options);
+        this._keyboardListener.setOptions(this._options);
     }
 
     public getOptions(): ScrollControlOptions {
