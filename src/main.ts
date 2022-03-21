@@ -1,6 +1,7 @@
 export * as cameraHelpers from './map/cameraHelpers';
 export { CameraPath } from './map/CameraPath';
 export { TargetCameraPath } from './map/TargetCameraPath';
+export { KeyFrame } from './map/CameraPath';
 
 export { Scroller } from './scroller/Scroller';
 export { ScriptLoader } from './scriptloader/ScriptLoader';

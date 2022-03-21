@@ -1,11 +1,12 @@
 import { LngLat, Map } from 'mapbox-gl';
 import { CurveInterpolator, getTtoUmapping } from 'curve-interpolator';
+import { CurveInterpolatorOptions } from 'curve-interpolator/dist/src/curve-interpolator';
+
 import {
     cameraOptionsFromFreeCameraOptions,
     FreeCameraPosition,
     getCameraFromPositionAndTarget,
 } from './cameraHelpers';
-import { CurveInterpolatorOptions } from 'curve-interpolator/dist/src/curve-interpolator';
 
 export type KeyFrame = {
     time: number;
@@ -50,16 +51,14 @@ export class TargetCameraPath {
 
         const t = (this._timeInterpolator.lookup(time, 0, 1)[1] as number) / (this._frames.length - 1);
         const uPos = getTtoUmapping(t, this._positionInterpolator.arcLengths);
-        const position = this._positionInterpolator.getPointAt(uPos) as [number, number, number];
+        const cameraPosition = this._positionInterpolator.getPointAt(uPos);
+        const cameraLngLat = [cameraPosition[0], cameraPosition[1]] as [number, number];
+        const cameraAltitude = cameraPosition[2] as number;
 
         const uTar = getTtoUmapping(t, this._targetInterpolator.arcLengths);
-        const target = this._targetInterpolator.getPointAt(uTar) as [number, number, number];
+        const targetPosition = this._targetInterpolator.getPointAt(uTar);
+        const targetLngLat = [targetPosition[0], targetPosition[1]] as [number, number];
 
-        return getCameraFromPositionAndTarget(
-            this._map,
-            [position[0], position[1]],
-            position[2],
-            [target[0], target[1]]
-        );
+        return getCameraFromPositionAndTarget(this._map, cameraLngLat, cameraAltitude, targetLngLat);
     }
 }
